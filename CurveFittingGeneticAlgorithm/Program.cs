@@ -14,6 +14,8 @@ namespace CurveFittingGeneticAlgorithm
         [STAThread]
         static void Main()
         {
+            RandomBufferGenerator rrr = new RandomBufferGenerator(1025);
+            string rand = Decoder.decode(rrr.GenerateBufferFromSeed(1024));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());

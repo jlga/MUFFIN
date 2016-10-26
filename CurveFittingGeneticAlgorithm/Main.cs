@@ -27,15 +27,19 @@ namespace CurveFittingGeneticAlgorithm
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            init();
+        }
+
+        public void init()
+        {
             Stopwatch sw = new Stopwatch();
             sw.Start();
             populate("-3,4*x^3+4,34*x^2+2", 20);
             sw.Stop();
             this.Text = Convert.ToString(sw.ElapsedMilliseconds);
-            RandomBufferGenerator rrr = new RandomBufferGenerator(10);
-            string rand = Decoder.decode(new byte[72]);
-            calculateY("1", 1);
-            this.Tag = this.Tag;
+            RandomBufferGenerator rrr = new RandomBufferGenerator(1024);
+            string rand = Decoder.decode(rrr.GenerateBufferFromSeed(712));
+            this.Text = rand;
         }
 
         public double calculateY(string equation, double x)
