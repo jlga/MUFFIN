@@ -13,9 +13,9 @@ namespace CurveFittingGeneticAlgorithm
     class Genetics
     {
         const double crossoverProbability = 0.85;
-        const double mutationProbability = 0.2;
-        const int    elitismPercentage = 2;
-        const int    populationSize = 100;
+        const double mutationProbability = 0.08;
+        const int    elitismPercentage = 1;
+        const int    populationSize = 200;
 
         double lastGenFitness = 0;
 
