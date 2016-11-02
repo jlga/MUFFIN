@@ -75,23 +75,10 @@ namespace CurveFittingGeneticAlgorithm
             Dictionary<int, double> dicOG = Utils.convertToDictionary(new Equation(0,0,1,0,10,0,0,0,10), 20);
             Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToObj(bytes), 20);
             double error = Utils.calculateError(dicOG, dicFK);
-            if(error != 0)
-            {
-                if(1/error < 0 || 1/error > 1)
-                {
-                    //throw new Exception(Decoder.decode(bytes) + " " + error);
-                }
-                return (1 / error).Clamp(0,1);
-            }
-            else
-            {
-                //if (1 / error < 0 || 1 / error > 1)
-                {
-                    //throw new Exception(Decoder.decode(bytes) + " " + error);
-                }
-                //throw new Exception(Decoder.decode(bytes) + " " + error);
-                return 1;
-            }
+            double calcerror = 1 - ((0.00001 * error) / ((0.00001 * error) + 1));
+            return calcerror;
+
+
             //double converted = Utils.ConvertRange(0, 1E40, 0, 1, error).Clamp(0, 1);
             //double fitness = 1 - converted;
             //Console.WriteLine(fitness);
