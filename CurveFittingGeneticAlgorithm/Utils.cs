@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Jace;
 using System.Windows.Forms;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace CurveFittingGeneticAlgorithm
 {
@@ -38,6 +40,16 @@ namespace CurveFittingGeneticAlgorithm
             return output;
         }
 
+        public static Dictionary<int, double> convertToDictionary(Equation equation, int size)
+        {
+            Dictionary<int, double> output = new Dictionary<int, double>();
+            for (int i = -size; i <= size; i++)
+            {
+                output.Add(i, calculateY(equation, i));
+            }
+            return output;
+        }
+
         public static double calculateY(string equation, double x)
         {
             CalculationEngine engine = new CalculationEngine();
@@ -46,6 +58,11 @@ namespace CurveFittingGeneticAlgorithm
             double result = engine.Calculate(equation, variables);
 
             return result;
+        }
+
+        public static double calculateY(Equation eq, double x)
+        {
+            return eq.d0 * Math.Pow((x + eq.d1), 4) + eq.d2 * Math.Pow((x + eq.d3), 3) + eq.d4 * Math.Pow((x + eq.d5), 2) + eq.d6 * Math.Pow((x + eq.d7), 1) + eq.d8;
         }
 
         public static double ConvertRange(double originalStart, double originalEnd, double newStart, double newEnd, double value)
@@ -68,6 +85,17 @@ namespace CurveFittingGeneticAlgorithm
             else
             {
                 code.Invoke();
+            }
+        }
+
+        public static string SerializeObject<T>(T toSerialize)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(textWriter, toSerialize);
+                return textWriter.ToString();
             }
         }
     }

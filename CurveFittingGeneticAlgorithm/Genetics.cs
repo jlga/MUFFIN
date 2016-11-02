@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using GAF;
 using GAF.Operators;
 
@@ -14,7 +15,7 @@ namespace CurveFittingGeneticAlgorithm
         const double crossoverProbability = 0.85;
         const double mutationProbability = 0.2;
         const int    elitismPercentage = 2;
-        const int    populationSize = 50;
+        const int    populationSize = 100;
 
         double lastGenFitness = 0;
 
@@ -71,24 +72,24 @@ namespace CurveFittingGeneticAlgorithm
             {
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
-            Dictionary<int, double> dicOG = Utils.convertToDictionary("x^2", 20);
-            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decode(bytes), 20);
+            Dictionary<int, double> dicOG = Utils.convertToDictionary(new Equation(0,0,1,0,10,0,0,0,10), 20);
+            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToObj(bytes), 20);
             double error = Utils.calculateError(dicOG, dicFK);
             if(error != 0)
             {
                 if(1/error < 0 || 1/error > 1)
                 {
-                    throw new Exception(Decoder.decode(bytes) + " " + error);
+                    //throw new Exception(Decoder.decode(bytes) + " " + error);
                 }
-                return 1 / error;
+                return (1 / error).Clamp(0,1);
             }
             else
             {
-                if (1 / error < 0 || 1 / error > 1)
+                //if (1 / error < 0 || 1 / error > 1)
                 {
-                    throw new Exception(Decoder.decode(bytes) + " " + error);
+                    //throw new Exception(Decoder.decode(bytes) + " " + error);
                 }
-                throw new Exception(Decoder.decode(bytes) + " " + error);
+                //throw new Exception(Decoder.decode(bytes) + " " + error);
                 return 1;
             }
             //double converted = Utils.ConvertRange(0, 1E40, 0, 1, error).Clamp(0, 1);
@@ -119,8 +120,10 @@ namespace CurveFittingGeneticAlgorithm
             {
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
-            Console.WriteLine("Eq : " + Decoder.decode(bytes));
-            form.backgroundWorker1.ReportProgress(Convert.ToInt32(e.Population.MaximumFitness*100), Decoder.decode(bytes));
+            Equation eq = Decoder.decodeToObj(bytes);
+            eq.fitness = e.Population.MaximumFitness;
+            Console.WriteLine("Eq : " + eq.ToString());
+            form.backgroundWorker1.ReportProgress(Convert.ToInt32(e.Population.MaximumFitness*100), JsonConvert.SerializeObject(eq));
             //pop(Decoder.decode(bytes), 20, "BestFit");
 
             //form.populateMethod(Decoder.decode(bytes), 20, "BestFit");

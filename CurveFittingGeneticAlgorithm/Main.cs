@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using Newtonsoft.Json;
 using Jace;
 
 //MUtative Function FIttiNg - MUFFIN
@@ -39,7 +40,7 @@ namespace CurveFittingGeneticAlgorithm
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            populateMethod("x^2", 20,"Graph");
+            populateMethod(new Equation(0, 0, 1, 0, 10, 0, 0, 0, 10), 20,"Graph");
             
             sw.Stop();
             this.Text = Convert.ToString(sw.ElapsedMilliseconds);
@@ -77,6 +78,30 @@ namespace CurveFittingGeneticAlgorithm
             return true;
         }
 
+        public bool populateMethod(Equation equation, int size, string graphseries)
+        {
+            chart1.Series.FindByName(graphseries).Points.Clear();
+            /*for (int i = 0; i < chart1.Series.FindByName(graphseries).Points.Count; i++)
+            {
+                
+                try
+                {
+                    chart1.Series.FindByName(graphseries).Points.RemoveAt(i);
+                }
+                catch(Exception e)
+                {
+
+                }
+            }*/
+            for (int i = -size; i <= size; i++)
+            {
+                chart1.Series.FindByName(graphseries).Points.AddXY(i, calculateY(equation.ToString(), i));
+                
+            }
+            Thread.Sleep(10);
+            return true;
+        }
+
         private void btn_start_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync();
@@ -91,9 +116,14 @@ namespace CurveFittingGeneticAlgorithm
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            chart1.Series.FindByName("Fitness").Points.Add(e.ProgressPercentage);
-            Console.WriteLine("Progress! " + e.ProgressPercentage);
-            populateMethod(e.UserState.ToString(), 20, "BestFit");
+            chart1.Series.FindByName("Fitness").Points.Add(JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()).fitness*100);
+            Console.WriteLine("Progress! " + JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()).fitness*100);
+            populateMethod(JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()), 20, "BestFit");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(Convert.ToString(Utils.calculateError(Utils.convertToDictionary("x^2", 20), Utils.convertToDictionary("0*(x+0)^4+0*(x+-100000)^3+0,9992*(x+0)^2+0*(x+-100000)^1+0",20))));
         }
     }
 }
