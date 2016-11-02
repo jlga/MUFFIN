@@ -18,7 +18,7 @@ namespace CurveFittingGeneticAlgorithm
 {
     public partial class Main : Form
     {
-        const int GRAPH_SIZE = 10; //
+        const int GRAPH_SIZE = 10;
         CalculationEngine engine;
         Genetics g;
         public delegate void populate();
