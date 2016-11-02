@@ -17,14 +17,17 @@ namespace CurveFittingGeneticAlgorithm
         const int    elitismPercentage = 1;
         const int    populationSize = 200;
 
+        int graphSize;
+
         double lastGenFitness = 0;
 
         GeneticAlgorithm ga;
         Main form;
         Func<string,int,string,bool> pop;
 
-        public Genetics(Main form1, Func<string, int, string, bool> populateM)
+        public Genetics(Main form1, Func<string, int, string, bool> populateM, int pGraphSize)
         {
+            graphSize = pGraphSize/2;
             pop = populateM;
             form1.Text = "test";
             form = form1;
@@ -72,21 +75,11 @@ namespace CurveFittingGeneticAlgorithm
             {
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
-            Dictionary<int, double> dicOG = Utils.convertToDictionary(new Equation(0,0,1,0,10,0,0,0,10), 20);
-            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToObj(bytes), 20);
+            Dictionary<int, double> dicOG = Utils.convertToDictionary(new Equation(0,0,1,0,10,0,0,0,10), graphSize);
+            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToObj(bytes), graphSize);
             double error = Utils.calculateError(dicOG, dicFK);
             double calcerror = 1 - ((0.00001 * error) / ((0.00001 * error) + 1));
             return calcerror;
-
-
-            //double converted = Utils.ConvertRange(0, 1E40, 0, 1, error).Clamp(0, 1);
-            //double fitness = 1 - converted;
-            //Console.WriteLine(fitness);
-            /*if(fitness==1)
-            {
-                throw new Exception(Decoder.decode(bytes) + " " + error);
-            }
-            return fitness.Clamp(0,1);*/
         }
 
         private void ga_OnGenerationComplete(object sender, GaEventArgs e)

@@ -33,14 +33,14 @@ namespace CurveFittingGeneticAlgorithm
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            init();
+            init(GRAPH_SIZE);
         }
 
-        public void init()
+        public void init(int graphSize)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            populateMethod(new Equation(0, 0, 1, 0, 10, 0, 0, 0, 10), 20,"Graph");
+            populateMethod(new Equation(0, 0, 1, 0, 10, 0, 0, 0, 10), graphSize,"Graph");
             
             sw.Stop();
             this.Text = Convert.ToString(sw.ElapsedMilliseconds);
@@ -51,16 +51,7 @@ namespace CurveFittingGeneticAlgorithm
             //populateMethod("x^4", 20, "BestFit");
             this.Text = rand;
 
-            g = new Genetics(this, populateMethod);
-        }
-
-        public double calculateY(string equation, double x)
-        {
-            Dictionary<string, double> variables = new Dictionary<string, double>();
-            variables.Add("x", x);
-            double result = engine.Calculate(equation, variables);
-
-            return result;
+            g = new Genetics(this, populateMethod, graphSize);
         }
 
         public bool populateMethod(string equation, int size, string graphseries)
@@ -72,7 +63,7 @@ namespace CurveFittingGeneticAlgorithm
             }
             for (int i = -size; i<=size;i++)
             {
-                chart1.Series.FindByName(graphseries).Points.AddXY(i, calculateY(equation, i));
+                chart1.Series.FindByName(graphseries).Points.AddXY(i, Utils.calculateY(equation, i));
             }
             Thread.Sleep(10);
             return true;
@@ -81,24 +72,11 @@ namespace CurveFittingGeneticAlgorithm
         public bool populateMethod(Equation equation, int size, string graphseries)
         {
             chart1.Series.FindByName(graphseries).Points.Clear();
-            /*for (int i = 0; i < chart1.Series.FindByName(graphseries).Points.Count; i++)
-            {
-                
-                try
-                {
-                    chart1.Series.FindByName(graphseries).Points.RemoveAt(i);
-                }
-                catch(Exception e)
-                {
-
-                }
-            }*/
             for (int i = -size; i <= size; i++)
             {
-                chart1.Series.FindByName(graphseries).Points.AddXY(i, calculateY(equation.ToString(), i));
+                chart1.Series.FindByName(graphseries).Points.AddXY(i, Utils.calculateY(equation, i));
                 
             }
-            Thread.Sleep(10);
             return true;
         }
 
