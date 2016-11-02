@@ -49,9 +49,6 @@ namespace CurveFittingGeneticAlgorithm
             ga.Operators.Add(elite);
             ga.Operators.Add(crossover);
             ga.Operators.Add(mutation);
-
-            //run the GA 
-            //ga.Run(TerminateAlgorithm);
         }
 
         public void run()
@@ -77,16 +74,6 @@ namespace CurveFittingGeneticAlgorithm
             double error = Utils.calculateError(dicOG, dicFK);
             double calcerror = 1 - ((0.00001 * error) / ((0.00001 * error) + 1));
             return calcerror;
-
-
-            //double converted = Utils.ConvertRange(0, 1E40, 0, 1, error).Clamp(0, 1);
-            //double fitness = 1 - converted;
-            //Console.WriteLine(fitness);
-            /*if(fitness==1)
-            {
-                throw new Exception(Decoder.decode(bytes) + " " + error);
-            }
-            return fitness.Clamp(0,1);*/
         }
 
         private void ga_OnGenerationComplete(object sender, GaEventArgs e)
@@ -96,8 +83,7 @@ namespace CurveFittingGeneticAlgorithm
             
             Console.WriteLine("Fit: " + e.Population.MaximumFitness + " " + (e.Population.MaximumFitness-lastGenFitness));
             lastGenFitness = e.Population.MaximumFitness;
-            //Console.WriteLine("Generation Complete " + e.Generation + " " + EvaluateFitness(e.Population.GetTop(1)[0]));
-            //pop("x^4",20,"BestFit");
+
             //get the best solution 
             var chromosome = e.Population.GetTop(1)[0];
 
@@ -111,22 +97,6 @@ namespace CurveFittingGeneticAlgorithm
             eq.fitness = e.Population.MaximumFitness;
             Console.WriteLine("Eq : " + eq.ToString());
             form.backgroundWorker1.ReportProgress(Convert.ToInt32(e.Population.MaximumFitness*100), JsonConvert.SerializeObject(eq));
-            //pop(Decoder.decode(bytes), 20, "BestFit");
-
-            //form.populateMethod(Decoder.decode(bytes), 20, "BestFit");
-            //decode chromosome
-            /*
-                        //get x and y from the solution 
-                        var x1 = Convert.ToInt32(chromosome.ToBinaryString(0, chromosome.Count / 2), 2);
-                        var y1 = Convert.ToInt32(chromosome.ToBinaryString(chromosome.Count / 2, chromosome.Count / 2), 2);
-
-                        //Adjust range to -100 to +100 
-                        var rangeConst = 200 / (System.Math.Pow(2, chromosome.Count / 2) - 1);
-                        var x = (x1 * rangeConst) - 100;
-                        var y = (y1 * rangeConst) - 100;
-                        */
-            //display the X, Y and fitness of the best chromosome in this generation 
-            //Console.WriteLine("x:{0} y:{1} Fitness{2}", x, y, e.Population.MaximumFitness);
         }
     }
 }
