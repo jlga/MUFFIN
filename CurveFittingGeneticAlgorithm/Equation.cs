@@ -42,4 +42,35 @@ namespace CurveFittingGeneticAlgorithm
             return d0 + "*(x+" + d1 + ")^4+" + d2 + "*(x+" + d3 + ")^3+" + d4 + "*(x+" + d5 + ")^2+" + d6 + "*(x+" + d7 + ")^1+" + d8;
         }
     }
+
+    [Serializable]
+    public class SmallEquation
+    {
+        public double d0;
+        public double d1;
+        public double d2;
+        public double d3;
+        public double d4;
+
+
+        public double fitness = 0;
+
+        public SmallEquation(double dd0, double dd1, double dd2, double dd3, double dd4)
+        {
+            d0 = dd0;
+            d1 = dd1;
+            d2 = dd2;
+            d3 = dd3;
+            d4 = dd4;
+
+        }
+
+        public SmallEquation()
+        { }
+
+        override public string ToString()
+        {
+            return string.Format("{0}*x^4+{1}*x^3+{2}*x^2+{3}*x+{4}", d0, d1, d2, d3, d4);
+        }
+    }
 }

@@ -18,6 +18,7 @@ namespace CurveFittingGeneticAlgorithm
         const int    populationSize = 200;
 
         double lastGenFitness = 0;
+        Dictionary<int, double> dicOG;
 
         GeneticAlgorithm ga;
         Main form;
@@ -69,8 +70,11 @@ namespace CurveFittingGeneticAlgorithm
             {
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
-            Dictionary<int, double> dicOG = Utils.convertToDictionary(new Equation(0,0,1,0,10,0,0,0,10), 20);
-            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToObj(bytes), 20);
+            if (dicOG == null)
+            {
+               dicOG = Utils.convertToDictionary(new SmallEquation(0,0,0,1,0), 20);
+            }
+            Dictionary<int, double> dicFK = Utils.convertToDictionary(Decoder.decodeToEquation(bytes), 20);
             double error = Utils.calculateError(dicOG, dicFK);
             double calcerror = 1 - ((0.00001 * error) / ((0.00001 * error) + 1));
             return calcerror;
@@ -93,7 +97,7 @@ namespace CurveFittingGeneticAlgorithm
             {
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
-            Equation eq = Decoder.decodeToObj(bytes);
+            Equation eq = Decoder.decodeToEquation(bytes);
             eq.fitness = e.Population.MaximumFitness;
             Console.WriteLine("Eq : " + eq.ToString());
             form.backgroundWorker1.ReportProgress(Convert.ToInt32(e.Population.MaximumFitness*100), JsonConvert.SerializeObject(eq));

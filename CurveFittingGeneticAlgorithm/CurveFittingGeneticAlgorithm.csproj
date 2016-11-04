@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Equation.cs" />
+    <Compile Include="SmallGenetics.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Decoder.cs" />
     <Compile Include="Main.cs">

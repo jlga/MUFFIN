@@ -21,8 +21,10 @@ namespace CurveFittingGeneticAlgorithm
         const int GRAPH_SIZE = 10;
         CalculationEngine engine;
         Genetics g;
+        SmallGenetics sg;
         public delegate void populate();
         public populate myDelegate;
+        public SmallEquation target = new SmallEquation(0.5, 0, -100, 0, 0);
 
         public Main()
         {
@@ -40,18 +42,19 @@ namespace CurveFittingGeneticAlgorithm
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            populateMethod(new Equation(0, 0, 1, 0, 10, 0, 0, 0, 10), 20,"Graph");
+            populateMethod(target, 20,"Graph");
             
             sw.Stop();
             this.Text = Convert.ToString(sw.ElapsedMilliseconds);
             RandomBufferGenerator rrr = new RandomBufferGenerator(1024);
-            string rand = Decoder.decode(rrr.GenerateBufferFromSeed(712));
+            string rand = Decoder.decodeToString(rrr.GenerateBufferFromSeed(712));
             //calculateY("-7,2711004537369E-289*(x+-1,29729856441743E+200)^4+-8,55276388740592E+148*(x+-1,5076262475443E+226)^3+6,97391098666866E-115*(x+-1,78144481002356E+304)^2+-9,55581921478411E-306*(x+-3,02431166243636E+212)^1+3,80136089506401E+122", 1);
             //populateMethod(rand, 20, "BestFit");
             //populateMethod("x^4", 20, "BestFit");
             this.Text = rand;
 
-            g = new Genetics(this, populateMethod);
+            //g = new Genetics(this, populateMethod);
+            sg = new SmallGenetics(this, populateMethod, target);
         }
 
         public bool populateMethod(string equation, int size, string graphseries)
@@ -77,6 +80,18 @@ namespace CurveFittingGeneticAlgorithm
             return true;
         }
 
+        public bool populateMethod(SmallEquation equation, int size, string graphseries)
+        {
+            chart1.Series.FindByName(graphseries).Points.Clear();
+            for (int i = -size; i <= size; i++)
+            {
+                chart1.Series.FindByName(graphseries).Points.AddXY(i, Utils.calculateY(equation, i));
+
+            }
+            Thread.Sleep(10);
+            return true;
+        }
+
         private void btn_start_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync();
@@ -86,14 +101,14 @@ namespace CurveFittingGeneticAlgorithm
         {
             Console.WriteLine("start");
            
-            g.run();
+            sg.run();
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             chart1.Series.FindByName("Fitness").Points.Add(JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()).fitness*100);
             Console.WriteLine("Progress! " + JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()).fitness*100);
-            populateMethod(JsonConvert.DeserializeObject<Equation>(e.UserState.ToString()), 20, "BestFit");
+            populateMethod(JsonConvert.DeserializeObject<SmallEquation>(e.UserState.ToString()), 20, "BestFit");
         }
 
         private void button1_Click(object sender, EventArgs e)

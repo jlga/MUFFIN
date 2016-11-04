@@ -49,6 +49,15 @@ namespace CurveFittingGeneticAlgorithm
             }
             return output;
         }
+        public static Dictionary<int, double> convertToDictionary(SmallEquation equation, int size)
+        {
+            Dictionary<int, double> output = new Dictionary<int, double>();
+            for (int i = -size; i <= size; i++)
+            {
+                output.Add(i, calculateY(equation, i));
+            }
+            return output;
+        }
 
         public static double calculateY(string equation, double x)
         {
@@ -63,6 +72,11 @@ namespace CurveFittingGeneticAlgorithm
         public static double calculateY(Equation eq, double x)
         {
             return eq.d0 * Math.Pow((x + eq.d1), 4) + eq.d2 * Math.Pow((x + eq.d3), 3) + eq.d4 * Math.Pow((x + eq.d5), 2) + eq.d6 * Math.Pow((x + eq.d7), 1) + eq.d8;
+        }
+
+        public static double calculateY(SmallEquation eq, double x)
+        {
+            return eq.d0 * Math.Pow((x), 4) + eq.d1 * Math.Pow((x), 3) + eq.d2 * Math.Pow((x), 2) + eq.d3 * Math.Pow((x), 1) + eq.d4;
         }
 
         public static double ConvertRange(double originalStart, double originalEnd, double newStart, double newEnd, double value)
