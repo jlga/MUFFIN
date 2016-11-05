@@ -35,6 +35,10 @@ namespace CurveFittingGeneticAlgorithm
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Decoder.testBit();
+
+
+
             init();
         }
 
@@ -42,19 +46,14 @@ namespace CurveFittingGeneticAlgorithm
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            populateMethod(target, 20,"Graph");
+            populateMethod(Config.target, 20,"Graph");
             
             sw.Stop();
             this.Text = Convert.ToString(sw.ElapsedMilliseconds);
             RandomBufferGenerator rrr = new RandomBufferGenerator(1024);
-            string rand = Decoder.decodeToString(rrr.GenerateBufferFromSeed(712));
-            //calculateY("-7,2711004537369E-289*(x+-1,29729856441743E+200)^4+-8,55276388740592E+148*(x+-1,5076262475443E+226)^3+6,97391098666866E-115*(x+-1,78144481002356E+304)^2+-9,55581921478411E-306*(x+-3,02431166243636E+212)^1+3,80136089506401E+122", 1);
-            //populateMethod(rand, 20, "BestFit");
-            //populateMethod("x^4", 20, "BestFit");
-            this.Text = rand;
 
             //g = new Genetics(this, populateMethod);
-            sg = new SmallGenetics(this, populateMethod, target);
+            sg = new SmallGenetics(this, populateMethod, Config.target);
         }
 
         public bool populateMethod(string equation, int size, string graphseries)

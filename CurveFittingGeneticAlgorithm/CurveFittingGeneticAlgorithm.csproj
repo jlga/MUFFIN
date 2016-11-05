@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B6E0E48D-E893-4D5A-8D49-8B93799823FA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CurveFittingGeneticAlgorithm</RootNamespace>
     <AssemblyName>CurveFittingGeneticAlgorithm</AssemblyName>
@@ -47,6 +47,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GAF, Version=2.2.5.40526, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GAF.2.2.5\lib\net45\GAF.dll</HintPath>
@@ -74,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Equation.cs" />
     <Compile Include="SmallGenetics.cs" />
     <Compile Include="Utils.cs" />

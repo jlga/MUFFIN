@@ -12,10 +12,10 @@ namespace CurveFittingGeneticAlgorithm
 {
     class SmallGenetics
     {
-        const double crossoverProbability = 0.85;
-        const double mutationProbability = 0.08;
-        const int    elitismPercentage = 0;
-        const int    populationSize = 200;
+        const double crossoverProbability = Config.crossoverProbability;
+        const double mutationProbability = Config.mutationProbability;
+        const int elitismPercentage = Config.elitismPercentage;
+        const int populationSize = Config.populationSize;
 
         SmallEquation target;
         double lastGenFitness = 0;
@@ -67,10 +67,13 @@ namespace CurveFittingGeneticAlgorithm
         {
             int numOfBytes = chromosome.ToBinaryString().Length / 8;
             byte[] bytes = new byte[numOfBytes];
-            for(int i=0; i<numOfBytes; i++)
+            /*for(int i=0; i<numOfBytes; i++)
             {
+                int ii = i;
                 bytes[i] = Convert.ToByte(chromosome.ToBinaryString().Substring(8 * i, 8), 2);
             }
+           */
+            bytes = Decoder.stringToByteArray(chromosome.ToBinaryString());
             if (dicOG == null)
             {
                dicOG = Utils.convertToDictionary(target, 20);
